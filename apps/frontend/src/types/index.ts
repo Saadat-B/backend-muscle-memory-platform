@@ -32,7 +32,7 @@ export interface Level {
   requirements: Requirement[];
   verificationEndpoints: VerificationEndpoint[];
   estimatedTime: string;
-  difficulty: 'beginner' | 'intermediate' | 'advanced';
+  difficulty: 'beginner' | 'intermediate' | 'advanced' | 'expert';
 }
 
 // User progress for a level
