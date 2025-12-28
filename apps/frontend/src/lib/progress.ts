@@ -3,6 +3,10 @@ import { levels } from '@/data/levels';
 
 const STORAGE_KEY = 'backend-muscle-memory-progress';
 
+// DEV MODE: Set to true to unlock all levels for testing
+// TODO: Set to false before production
+const DEV_MODE = true;
+
 // Default progress state
 const getDefaultProgress = (): UserProgress => {
   const levelProgress: Record<string, LevelProgress> = {};
@@ -10,7 +14,8 @@ const getDefaultProgress = (): UserProgress => {
   levels.forEach((level, index) => {
     levelProgress[level.id] = {
       levelId: level.id,
-      status: index === 0 ? 'available' : 'locked',
+      // In dev mode, all levels are available. In prod, only first is available.
+      status: DEV_MODE ? 'available' : (index === 0 ? 'available' : 'locked'),
       requirementsCompleted: []
     };
   });
@@ -162,6 +167,9 @@ export const getCurrentLevel = () => {
 
 // Check if level is accessible (available, in_progress, or completed)
 export const isLevelAccessible = (levelId: string): boolean => {
+  // In dev mode, all levels are accessible
+  if (DEV_MODE) return true;
+  
   const status = getLevelStatus(levelId);
   return status !== 'locked';
 };
