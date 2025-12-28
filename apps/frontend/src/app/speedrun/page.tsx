@@ -4,7 +4,7 @@ import { useState, useCallback, useEffect } from 'react';
 import Link from 'next/link';
 import { levels } from '@/data/levels';
 import { getProgress, updateSpeedRunTime } from '@/lib/progress';
-import { mockVerifyEndpoint } from '@/lib/api';
+import { smartVerifyEndpoint } from '@/lib/api';
 import Timer, { useTimer } from '@/components/ui/Timer';
 
 interface LevelResult {
@@ -69,7 +69,7 @@ export default function SpeedRunPage() {
       let allPassed = true;
 
       for (const endpoint of level.verificationEndpoints) {
-        const result = await mockVerifyEndpoint(
+        const result = await smartVerifyEndpoint(
           endpoint.method,
           endpoint.path,
           endpoint.expectedStatus

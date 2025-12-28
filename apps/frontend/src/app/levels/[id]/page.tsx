@@ -589,7 +589,6 @@ export default function LevelDetailPage({ params }: { params: Promise<{ id: stri
                   key={endpoint.id}
                   endpoint={endpoint}
                   onVerified={(success) => handleVerificationResult(endpoint.id, success)}
-                  useMock={true}
                 />
               ))}
             </div>
