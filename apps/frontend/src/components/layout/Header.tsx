@@ -21,7 +21,7 @@ export default function Header() {
   }, [pathname]);
 
   const navLinks = [
-    { href: '/', label: 'Dashboard' },
+    { href: '/dashboard', label: 'Dashboard' },
     { href: '/levels', label: 'Levels' },
     { href: '/speedrun', label: 'Speed Run' },
   ];
