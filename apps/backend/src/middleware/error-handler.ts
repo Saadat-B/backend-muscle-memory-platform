@@ -1,38 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
 
-interface AppError extends Error {
-  statusCode?: number;
-  code?: string;
-  details?: unknown;
-}
-
-export const errorHandler = (
-  err: AppError,
-  req: Request,
-  res: Response,
-  _next: NextFunction
-): void => {
-  const statusCode = err.statusCode || 500;
-  const message = err.message || 'Internal Server Error';
-  
-  // Log the error
-  console.error('Error:', {
-    requestId: req.requestId,
-    statusCode,
-    message,
-    stack: err.stack,
-    timestamp: new Date().toISOString(),
-  });
-  
-  // Send error response
-  res.status(statusCode).json({
-    error: message,
-    code: err.code || 'INTERNAL_ERROR',
-    requestId: req.requestId,
-    ...(process.env.NODE_ENV !== 'production' && err.details && { details: err.details }),
-  });
-};
-
 // Custom error classes
 export class AppError extends Error {
   statusCode: number;
@@ -71,3 +38,36 @@ export class ForbiddenError extends AppError {
     super(message, 403, 'FORBIDDEN');
   }
 }
+
+// Error handler middleware
+export const errorHandler = (
+  err: Error & { statusCode?: number; code?: string; details?: unknown },
+  req: Request,
+  res: Response,
+  _next: NextFunction
+): void => {
+  const statusCode = err.statusCode || 500;
+  const message = err.message || 'Internal Server Error';
+  
+  // Log the error
+  console.error('Error:', {
+    requestId: req.requestId,
+    statusCode,
+    message,
+    stack: err.stack,
+    timestamp: new Date().toISOString(),
+  });
+  
+  // Build response object
+  const response: Record<string, unknown> = {
+    error: message,
+    code: err.code || 'INTERNAL_ERROR',
+    requestId: req.requestId,
+  };
+  
+  if (process.env.NODE_ENV !== 'production' && err.details) {
+    response.details = err.details;
+  }
+  
+  res.status(statusCode).json(response);
+};

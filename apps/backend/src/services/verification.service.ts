@@ -133,7 +133,7 @@ class VerificationService {
       
       // Check response structure if validator exists
       const validator = validators[endpointKey];
-      let validationResult = { valid: true, reason: undefined as string | undefined };
+      let validationResult: { valid: boolean; reason?: string } = { valid: true };
       if (validator && statusMatch) {
         validationResult = validator(data);
       }
