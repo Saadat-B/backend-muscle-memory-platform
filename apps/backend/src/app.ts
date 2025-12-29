@@ -1,8 +1,10 @@
-import express, { Application, Request, Response, NextFunction } from 'express';
+import express, { Application, Request, Response } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import { healthRouter } from './routes/health.js';
 import { verifyRouter } from './routes/verify.js';
+import { resourceRouter } from './routes/resources.js';
+import { authRouter } from './routes/auth.js';
 import { requestLogger } from './middleware/request-logger.js';
 import { errorHandler } from './middleware/error-handler.js';
 
@@ -26,6 +28,8 @@ app.use(requestLogger);
 // Routes
 app.use('/', healthRouter);
 app.use('/verify', verifyRouter);
+app.use('/resources', resourceRouter);
+app.use('/auth', authRouter);
 
 // 404 handler
 app.use((_req: Request, res: Response) => {
